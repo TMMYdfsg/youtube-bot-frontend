@@ -1,26 +1,29 @@
-// frontend/src/App.tsx (型定義エラー修正版)
+// frontend/src/App.tsx (認証＆ローカル背景画像付き 完成版)
 
 import React, { useState, useEffect } from 'react';
+import { checkAuth, logout } from './api';
+
+// --- コンポーネントのインポート ---
+// ダッシュボードで使う部品
 import BotStatus from './components/BotStatus';
 import ChatLog from './components/ChatLog';
 import ManualChatForm from './components/ManualChatForm';
 import LiveStreamPlayer from './components/LiveStreamPlayer';
-import Login from './components/Login';
-import { checkAuth, logout } from './api';
+// 認証画面
+import PasskeyAuth from './components/PasskeyAuth'; 
 
-// プロジェクト内の画像をインポートします
+// ★★★ 1. プロジェクト内の画像をインポートします ★★★
 // ファイル名は、あなたが 'src/assets/images/' に入れた画像の名前に合わせて変更してください
-import customBackgroundImage from './assets/images/my-background.jpg';
+import customBackgroundImage from './assets/images/my-background.jpg'; 
 
 // --- ダッシュボードコンポーネントの型定義 ---
-// ★★★ Dashboardが受け取るpropsの型を定義します ★★★
 interface DashboardProps {
   onLogout: () => void;
 }
 
 // --- メインダッシュボードのコンポーネント ---
-// ★★★ 定義した型をコンポーネントに適用します ★★★
 const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
+  // --- スタイル定義 ---
   const appStyle: React.CSSProperties = {
     backgroundImage: `url(${customBackgroundImage})`,
     backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed',
@@ -46,12 +49,12 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   );
 };
 
-
 // --- アプリケーション全体のメインコンポーネント ---
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  // アプリ起動時にログイン状態を確認
   useEffect(() => {
     const verifyAuth = async () => {
       try {
@@ -66,23 +69,20 @@ function App() {
     verifyAuth();
   }, []);
 
-  const handleLoginSuccess = () => {
-    setIsAuthenticated(true);
-  };
+  const handleLoginSuccess = () => setIsAuthenticated(true);
   
   const handleLogout = async () => {
     await logout();
     setIsAuthenticated(false);
   };
 
-  if (isLoading) {
-    return <div>読み込み中...</div>;
-  }
+  if (isLoading) return <div>読み込み中...</div>;
 
+  // 認証状態に応じて、パスキー認証画面かダッシュボードを表示
   return isAuthenticated ? (
     <Dashboard onLogout={handleLogout} />
   ) : (
-    <Login onLoginSuccess={handleLoginSuccess} />
+    <PasskeyAuth onLoginSuccess={handleLoginSuccess} />
   );
 }
 
