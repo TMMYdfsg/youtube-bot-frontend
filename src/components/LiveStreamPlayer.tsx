@@ -2,32 +2,36 @@ import React, { useEffect, useState } from 'react';
 
 // 仮のAPI関数です。実際のapi.tsに合わせてください。
 const fetchBotStatus = async () => {
-    const response = await fetch('http://localhost:5000/api/status');
+    const response = await fetch('https://youtube-bot-backend.onrender.com/api/live');
     if (!response.ok) {
         throw new Error('Network response was not ok');
     }
-    return response.json();
-}
+    return response.json(); // { live: true, videoId: "abc123" }
+};
 
 export default function LiveStreamPlayer() {
   const [videoId, setVideoId] = useState<string | null>(null);
 
-  useEffect(() => {
-    const checkStatus = async () => {
-      try {
-        const status = await fetchBotStatus();
-        setVideoId(status.video_id);
-      } catch (error) {
-        console.error("Failed to fetch bot status:", error);
+useEffect(() => {
+  const checkStatus = async () => {
+    try {
+      const status = await fetchBotStatus();
+      if (status.live && status.videoId) {
+        setVideoId(status.videoId);
+      } else {
         setVideoId(null);
       }
-    };
+    } catch (error) {
+      console.error("Failed to fetch live status:", error);
+      setVideoId(null);
+    }
+  };
 
-    checkStatus(); // 最初に一度実行
-    const interval = setInterval(checkStatus, 15000); // 15秒ごとにステータスを確認
+  checkStatus(); // 最初に一度実行
+  const interval = setInterval(checkStatus, 15000); // 15秒ごとにステータスを確認
+  return () => clearInterval(interval);
+}, []);
 
-    return () => clearInterval(interval);
-  }, []);
 
   if (!videoId) {
     return (
