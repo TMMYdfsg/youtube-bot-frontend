@@ -1,7 +1,7 @@
 // frontend/src/api.ts (パスキー認証対応 最終完成版)
 
-const API_BASE_URL = "http://localhost:5000"; // ローカル開発用
-// const API_BASE_URL = "https://your-bot-name.onrender.com"; // ★デプロイ時にURLを書き換えてください
+// const API_BASE_URL = "http://localhost:5000"; // ローカル開発用
+const API_BASE_URL = "https://your-bot-name.onrender.com"; // ★デプロイ時にURLを書き換えてください
 
 // --- ★★★ パスキー関連API ★★★ ---
 
