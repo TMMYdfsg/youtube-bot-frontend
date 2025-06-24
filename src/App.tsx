@@ -6,16 +6,14 @@ import ChatLog from './components/ChatLog';
 import ManualChatForm from './components/ManualChatForm';
 import LiveStreamPlayer from './components/LiveStreamPlayer';
 
-// ★★★ 1. プロジェクト内の画像をインポートします ★★★
+// プロジェクト内の画像をインポートします
 // ファイル名はあなたが入れた画像の名前に合わせて変更してください
 import backgroundImage from './assets/images/my-background.jpg'; 
 
 function App() {
   // --- スタイル定義 ---
 
-  // アプリケーション全体のスタイル
   const appStyle: React.CSSProperties = {
-    // ★★★ 2. インポートした画像を背景として使用します ★★★
     backgroundImage: `url(${backgroundImage})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
@@ -25,7 +23,6 @@ function App() {
     padding: '20px',
   };
 
-  // 各セクション（部品）のスタイル
   const sectionStyle: React.CSSProperties = {
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
     padding: '20px',
@@ -52,7 +49,8 @@ function App() {
         <BotStatus />
       </div>
 
-      <div style{...sectionStyle}>
+      {/* ★★★ ここが修正箇所です ★★★ */}
+      <div style={sectionStyle}> 
         <ManualChatForm />
       </div>
 
