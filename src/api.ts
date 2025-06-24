@@ -16,6 +16,12 @@ export const fetchChatLog = async () => {
     return fetch(`${API_BASE_URL}/api/chat-log`).then(handleResponse);
 };
 
+export const fetchGames = async () =>
+  fetch("https://youtube-bot-backend.onrender.com/api/games").then(res => res.json());
+
+export const fetchKeywordsForGame = async (game: string) =>
+  fetch(`https://youtube-bot-backend.onrender.com/api/keywords?game=${game}`).then(res => res.json());
+
 export const sendMessage = async (message: string) => {
     return fetch(`${API_BASE_URL}/api/send-message`, {
         method: "POST",
