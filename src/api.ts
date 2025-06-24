@@ -1,12 +1,11 @@
-// frontend/src/api.ts (ログイン機能なし・シンプル版)
+// frontend/src/api.ts (分析機能付き 最終版)
 
-// ★デプロイ時は、このURLをRenderのバックエンドURLに書き換えてください
+// ★デプロイ時は、このURLをRenderのバックエンドURLに設定してください
 const API_BASE_URL = "https://youtube-bot-backend.onrender.com";
 
 // --- Botデータ関連API ---
 
 export const fetchBotStatus = async () => {
-    // ログイン不要になったため、credentialsの記述を削除
     return fetch(`${API_BASE_URL}/api/status`).then(handleResponse);
 };
 
@@ -21,6 +20,16 @@ export const sendMessage = async (message: string) => {
         body: JSON.stringify({ message }),
     }).then(handleResponse);
 };
+
+// ★★★ 分析用APIを呼び出す関数を新しく追加 ★★★
+export const analyzeUser = async (author: string) => {
+    return fetch(`${API_BASE_URL}/api/analyze-user`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ author }),
+    }).then(handleResponse);
+};
+
 
 // --- 共通レスポンス処理 ---
 const handleResponse = async (response: Response) => {
