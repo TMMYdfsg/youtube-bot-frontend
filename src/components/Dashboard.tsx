@@ -1,25 +1,19 @@
-// frontend/src/components/Dashboard.tsx
+// frontend/src/components/Dashboard.tsx (ログイン機能削除版)
 
 import React from 'react';
 
-// --- このダッシュボードで使う部品（コンポーネント）をインポート ---
+// --- コンポーネントのインポート ---
 import BotStatus from './BotStatus';
 import ChatLog from './ChatLog';
 import ManualChatForm from './ManualChatForm';
 import LiveStreamPlayer from './LiveStreamPlayer';
 
 // --- 背景画像をインポート ---
-// ファイル名は、あなたが 'src/assets/images/' に入れた画像の名前に合わせて変更してください
 import customBackgroundImage from '../assets/images/my-background.jpg'; 
 
-// --- このコンポーネントが受け取るデータの型を定義 ---
-interface DashboardProps {
-  onLogout: () => void;
-}
-
-// --- メインダッシュボードのコンポーネント本体 ---
-const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
-  // --- スタイル定義 ---
+// ★★★ onLogoutを受け取らないように修正 ★★★
+const Dashboard: React.FC = () => {
+  // --- スタイル定義 (変更なし) ---
   const appStyle: React.CSSProperties = {
     backgroundImage: `url(${customBackgroundImage})`,
     backgroundSize: 'cover',
@@ -46,23 +40,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   // --- 画面に表示する内容（JSX） ---
   return (
     <div style={appStyle}>
-      <button 
-        onClick={onLogout} 
-        style={{
-          position: 'absolute', 
-          top: 15, 
-          right: 15, 
-          cursor: 'pointer', 
-          padding: '8px 12px', 
-          borderRadius: '5px',
-          border: 'none',
-          backgroundColor: '#f44336',
-          color: 'white'
-        }}
-      >
-        ログアウト
-      </button>
-
+      {/* ★★★ ログアウトボタンを削除 ★★★ */}
       <h1 style={h1Style}>YouTube Live Bot 管理画面</h1>
       
       <div style={sectionStyle}>
