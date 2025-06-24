@@ -1,22 +1,20 @@
-// frontend/src/api.ts (認証機能付き 完成版)
+// frontend/src/api.ts (型定義エラー修正版)
 
-const API_BASE_URL = "https://youtube-bot-backend.onrender.com";
-// const API_BASE_URL = "https://your-bot-name.onrender.com"; // デプロイ用
+// const API_BASE_URL = "http://localhost:5000"; // ローカル開発用
+const API_BASE_URL = "https://your-bot-name.onrender.com"; // デプロイ用
 
 // --- 認証関連API ---
 
-// ログインを試みる関数
-export const login = async (username, password) => {
+// ★★★ 引数に string 型を指定 ★★★
+export const login = async (username: string, password: string) => {
     return fetch(`${API_BASE_URL}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        // ★★★ cookieをサーバーとやり取りするために必須 ★★★
         credentials: 'include', 
         body: JSON.stringify({ username, password }),
     }).then(handleResponse);
 };
 
-// ログアウトする関数
 export const logout = async () => {
     return fetch(`${API_BASE_URL}/api/logout`, {
         method: 'POST',
@@ -24,7 +22,6 @@ export const logout = async () => {
     }).then(handleResponse);
 };
 
-// 現在ログインしているか確認する関数
 export const checkAuth = async () => {
     return fetch(`${API_BASE_URL}/api/check-auth`, {
         credentials: 'include',
