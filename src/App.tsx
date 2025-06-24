@@ -1,4 +1,4 @@
-// frontend/src/App.tsx (認証＆ローカル背景画像付き 完成版)
+// frontend/src/App.tsx (型定義エラー修正版)
 
 import React, { useState, useEffect } from 'react';
 import BotStatus from './components/BotStatus';
@@ -8,14 +8,20 @@ import LiveStreamPlayer from './components/LiveStreamPlayer';
 import Login from './components/Login';
 import { checkAuth, logout } from './api';
 
-// ★★★ 1. プロジェクト内の画像をインポートします ★★★
+// プロジェクト内の画像をインポートします
 // ファイル名は、あなたが 'src/assets/images/' に入れた画像の名前に合わせて変更してください
-import customBackgroundImage from './assets/images/my-background.jpg'; 
+import customBackgroundImage from './assets/images/my-background.jpg';
+
+// --- ダッシュボードコンポーネントの型定義 ---
+// ★★★ Dashboardが受け取るpropsの型を定義します ★★★
+interface DashboardProps {
+  onLogout: () => void;
+}
 
 // --- メインダッシュボードのコンポーネント ---
-const Dashboard = ({ onLogout }) => {
+// ★★★ 定義した型をコンポーネントに適用します ★★★
+const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   const appStyle: React.CSSProperties = {
-    // ★★★ 2. インポートした画像を背景として使用します ★★★
     backgroundImage: `url(${customBackgroundImage})`,
     backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed',
     minHeight: '100vh', color: 'white', padding: '20px',
@@ -30,7 +36,7 @@ const Dashboard = ({ onLogout }) => {
   
   return (
     <div style={appStyle}>
-      <button onClick={onLogout} style={{position: 'absolute', top: 15, right: 15}}>ログアウト</button>
+      <button onClick={onLogout} style={{position: 'absolute', top: 15, right: 15, cursor: 'pointer', padding: '8px 12px', borderRadius: '5px' }}>ログアウト</button>
       <h1 style={h1Style}>YouTube Live Bot 管理画面</h1>
       <div style={sectionStyle}><LiveStreamPlayer /></div>
       <div style={sectionStyle}><BotStatus /></div>
@@ -46,7 +52,6 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // アプリ起動時に一度だけ、ログイン状態を確認する
   useEffect(() => {
     const verifyAuth = async () => {
       try {
@@ -70,12 +75,10 @@ function App() {
     setIsAuthenticated(false);
   };
 
-  // 認証状態を確認中は、ローディング画面を表示
   if (isLoading) {
     return <div>読み込み中...</div>;
   }
 
-  // 認証状態に応じて、ログイン画面かダッシュボードを表示
   return isAuthenticated ? (
     <Dashboard onLogout={handleLogout} />
   ) : (
