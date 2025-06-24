@@ -5,6 +5,9 @@ const API_BASE_URL = "https://youtube-bot-backend.onrender.com";
 
 // --- Botデータ関連API ---
 
+export const fetchLiveVideo = async () =>
+  fetch("https://youtube-bot-backend.onrender.com/api/live").then((res) => res.json());
+
 export const fetchBotStatus = async () => {
     return fetch(`${API_BASE_URL}/api/status`).then(handleResponse);
 };
