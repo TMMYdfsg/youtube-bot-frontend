@@ -1,19 +1,46 @@
-// frontend/src/api.ts (型定義エラー修正版)
+// frontend/src/api.ts (パスキー認証対応 最終完成版)
 
-// const API_BASE_URL = "http://localhost:5000"; // ローカル開発用
-const API_BASE_URL = "https://your-bot-name.onrender.com"; // デプロイ用
+const API_BASE_URL = "http://localhost:5000"; // ローカル開発用
+// const API_BASE_URL = "https://your-bot-name.onrender.com"; // ★デプロイ時にURLを書き換えてください
 
-// --- 認証関連API ---
+// --- ★★★ パスキー関連API ★★★ ---
 
-// ★★★ 引数に string 型を指定 ★★★
-export const login = async (username: string, password: string) => {
-    return fetch(`${API_BASE_URL}/api/login`, {
+export const passkeyRegisterRequest = (username: string) => {
+    return fetch(`${API_BASE_URL}/api/passkey/register-request`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include', 
-        body: JSON.stringify({ username, password }),
+        credentials: 'include',
+        body: JSON.stringify({ username }),
     }).then(handleResponse);
 };
+
+export const passkeyRegisterVerify = (body: any) => {
+    return fetch(`${API_BASE_URL}/api/passkey/register-verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(body),
+    }).then(handleResponse);
+};
+
+export const passkeyLoginRequest = () => {
+    return fetch(`${API_BASE_URL}/api/passkey/login-request`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+    }).then(handleResponse);
+};
+
+export const passkeyLoginVerify = (body: any) => {
+    return fetch(`${API_BASE_URL}/api/passkey/login-verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(body),
+    }).then(handleResponse);
+};
+
+// --- 認証状態とログアウト ---
 
 export const logout = async () => {
     return fetch(`${API_BASE_URL}/api/logout`, {
@@ -27,7 +54,6 @@ export const checkAuth = async () => {
         credentials: 'include',
     }).then(handleResponse);
 };
-
 
 // --- Botデータ関連API ---
 
@@ -47,7 +73,6 @@ export const sendMessage = async (message: string) => {
         body: JSON.stringify({ message }),
     }).then(handleResponse);
 };
-
 
 // --- 共通レスポンス処理 ---
 const handleResponse = async (response: Response) => {
