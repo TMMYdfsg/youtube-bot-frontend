@@ -24,6 +24,21 @@ export const sendMessage = async (message: string) => {
     }).then(handleResponse);
 };
 
+export const testGemini = async (message: string): Promise<string> => {
+  const response = await fetch("https://youtube-bot-backend.onrender.com/api/test-gemini", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Gemini API呼び出し失敗");
+  }
+
+  const data = await response.json();
+  return data.response;
+};
+
 // ★★★ 分析用APIを呼び出す関数を新しく追加 ★★★
 export const analyzeUser = async (author: string) => {
     return fetch(`${API_BASE_URL}/api/analyze-user`, {
