@@ -1,11 +1,17 @@
-// frontend/src/App.tsx (ログイン機能削除版)
-
-import React from 'react';
-import Dashboard from './components/Dashboard'; // Dashboardコンポーネントをインポート
+import React from "react";
+import BotStatus from "./components/BotStatus";
+import ChatLog from "./components/ChatLog";
+import LiveStreamPlayer from "./components/LiveStreamPlayer";
 
 function App() {
-  // 認証ロジックを削除し、常にDashboardを表示する
-  return <Dashboard />;
+  return (
+    <div className="App">
+      <h1>YouTube Bot 管理画面</h1>
+      <BotStatus />
+      <ChatLog />
+      <LiveStreamPlayer /> {/* ← ライブ動画を表示 */}
+    </div>
+  );
 }
 
 export default App;
