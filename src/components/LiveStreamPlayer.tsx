@@ -1,64 +1,62 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-// 仮のAPI関数です。実際のapi.tsに合わせてください。
-const fetchBotStatus = async () => {
-    const response = await fetch('https://youtube-bot-backend.onrender.com/api/live');
-    if (!response.ok) {
-        throw new Error('Network response was not ok');
-    }
-    return response.json(); // { live: true, videoId: "abc123" }
-};
-
+/**
+ * ライブ配信を取得して、YouTubeの埋め込み動画を表示するReactコンポーネント
+ */
 export default function LiveStreamPlayer() {
   const [videoId, setVideoId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-useEffect(() => {
-  const checkStatus = async () => {
+  /**
+   * バックエンドAPIからライブ配信の状態とvideoIdを取得
+   */
+  const fetchLiveStatus = async () => {
     try {
-      const status = await fetchBotStatus();
-      if (status.live && status.videoId) {
-        setVideoId(status.videoId);
+      const response = await fetch("https://youtube-bot-backend.onrender.com/api/live");
+      if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}`);
+      }
+      const data = await response.json();
+      if (data.live && data.videoId) {
+        setVideoId(data.videoId);
+        setError(null);
       } else {
         setVideoId(null);
       }
-    } catch (error) {
-      console.error("Failed to fetch live status:", error);
+    } catch (err) {
+      console.error("ライブ情報の取得に失敗しました:", err);
+      setError("ライブ情報の取得に失敗しました");
       setVideoId(null);
     }
   };
 
-  checkStatus(); // 最初に一度実行
-  const interval = setInterval(checkStatus, 15000); // 15秒ごとにステータスを確認
-  return () => clearInterval(interval);
-}, []);
-
-
-  if (!videoId) {
-    return (
-      <div>
-        <h3>現在のライブ配信</h3>
-        <p>現在、ライブ配信はありません。</p>
-      </div>
-    );
-  }
-
-  // YouTubeの埋め込みURLを生成
-  const videoSrc = `https://www.youtube.com/embed/${videoId}`;
+  // 初回と15秒ごとにライブ配信状態を確認
+  useEffect(() => {
+    fetchLiveStatus();
+    const interval = setInterval(fetchLiveStatus, 15000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div>
-      <h3>現在のライブ配信</h3>
-      {/* レスポンシブ対応の埋め込みコンテナ */}
-      <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}>
-        <iframe
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-          src={videoSrc}
-          title="YouTube video player"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe>
-      </div>
+      <h3>🎥 現在のライブ配信</h3>
+
+      {error && <p style={{ color: "red" }}>⚠️ {error}</p>}
+
+      {!videoId ? (
+        <p>現在、ライブ配信はありません。</p>
+      ) : (
+        <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, overflow: "hidden" }}>
+          <iframe
+            title="Live YouTube Stream"
+            src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+            style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
+      )}
     </div>
   );
 }
